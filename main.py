@@ -20,7 +20,7 @@ if __name__ == '__main__':
     )
 
     val_dataset = valdataset = UCF101Dataset(
-    root='./data/UCF-101',
+    root='../data/UCF-101',
     annotation_path='./data/UCF_annotations',
     frames_per_clip=16,
     step_between_clips=4,
