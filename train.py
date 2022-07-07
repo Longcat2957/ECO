@@ -1,7 +1,7 @@
 import torch
 from tqdm import tqdm
 
-def train_model(net, dataloaders_dict, criterion, optimizer, num_epochs):
+def train_model(net, dataloaders_dict, criterion, optimizer, num_epochs, train_intervals):
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     print(f'device = {device}')
     net.to(device)
@@ -47,3 +47,8 @@ def train_model(net, dataloaders_dict, criterion, optimizer, num_epochs):
             epoch_acc = epoch_corrects.double() / len(dataloaders_dict[phase].dataset)
 
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(phase, epoch_loss, epoch_acc))
+    
+        if epoch % train_intervals == 0 and epoch != 0:
+            torch.save(net, '.weights/{}.pth'.format(epoch))
+    
+    torch.save(net, './weights/{}_final.pth'.format(num_epochs))

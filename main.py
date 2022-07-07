@@ -21,6 +21,7 @@ if __name__ == '__main__':
     parser.add_argument("--save_interval", type=int, default=4, help="save interval")
 
     opt = parser.parse_args()
+    print(opt)
     
     train_path_list = make_datapath_list(opt.train_root_path)
     val_path_list = make_datapath_list(opt.val_root_path)
@@ -50,4 +51,4 @@ if __name__ == '__main__':
     my_opt = torch.optim.SGD(my_model.parameters(),lr=0.001, momentum=0.9, dampening=0, nesterov=True)
 
     EPOCH = opt.epochs
-    train_model(my_model, whole_dataloader, my_loss, my_opt, EPOCH)
+    train_model(my_model, whole_dataloader, my_loss, my_opt, EPOCH, opt.save_interval)
