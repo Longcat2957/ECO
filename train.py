@@ -2,7 +2,7 @@ import torch
 from tqdm import tqdm
 
 def train_model(net, dataloaders_dict, criterion, optimizer, num_epochs):
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     print(f'device = {device}')
     net.to(device)
     print(f'load model to {device}')
@@ -25,7 +25,7 @@ def train_model(net, dataloaders_dict, criterion, optimizer, num_epochs):
             if (epoch == 0) and (phase == 'train'):
                 continue
             
-            for inputs, labels in tqdm(dataloaders_dict[phase]):
+            for inputs, _, labels, _ in tqdm(dataloaders_dict[phase]):
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 

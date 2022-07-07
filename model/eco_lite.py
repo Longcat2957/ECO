@@ -5,7 +5,7 @@ from .eco2d import ECO_2D
 from .eco3d import ECO_3D
 
 class ECO_Lite(nn.Module):
-    def __init__(self):
+    def __init__(self, num_of_classes=101):
         super(ECO_Lite, self).__init__()
 
         # 2D Net 모듈
@@ -15,7 +15,7 @@ class ECO_Lite(nn.Module):
         self.eco_3d = ECO_3D()
 
         # 클래스 분류의 전결합층
-        self.fc_final = nn.Linear(in_features=512, out_features=101, bias=True)
+        self.fc_final = nn.Linear(in_features=512, out_features=num_of_classes, bias=True)
 
     def forward(self, x):
         '''
