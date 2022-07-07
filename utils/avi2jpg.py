@@ -1,6 +1,7 @@
 import os
-import subprocess
 import cv2
+import argparse
+import pathlib
 
 class avi2jpg:
     vid = None
@@ -18,8 +19,12 @@ class avi2jpg:
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dir", type=str, default="../../data/UCF-101/train")
+    opt = parser.parse_args()
     # *.avi foramt to *.jpg
-    dir_path = '../data/UCF-101/val'
+    
+    dir_path = pathlib.Path(opt.dir)
     class_list = os.listdir(path=dir_path)
     # print(class_list)
     
