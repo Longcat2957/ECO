@@ -49,6 +49,6 @@ def train_model(net, dataloaders_dict, criterion, optimizer, num_epochs, train_i
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(phase, epoch_loss, epoch_acc))
     
         if epoch % train_intervals == 0 and epoch != 0:
-            torch.save(net, '.weights/{}.pth'.format(epoch))
+            torch.save(net, './weights/{}.pth'.format(epoch))
     
     torch.save(net, './weights/{}_final.pth'.format(num_epochs))

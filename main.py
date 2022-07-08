@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser.add_argument("--val_root_path", type=str, default='../data/UCF-101_C10/val/', help="validation files path")
     parser.add_argument("--batch_size", type=int, default=1, help="batch_size")
     parser.add_argument("--epochs", type=int, default=10, help="number of epochs")
-    parser.add_argument("--checkpoint", type=str, default="", help = "Optional path to checkpoint model")
+    parser.add_argument("--checkpoint", type=str, default=None, help = "Optional path to checkpoint model")
     parser.add_argument("--classid", type=str, default="./classid.txt", help="class & id config")
     parser.add_argument("--save_interval", type=int, default=4, help="save interval")
 
@@ -48,7 +48,7 @@ if __name__ == '__main__':
 
     my_model = ECO_Lite(num_of_classes=opt.classes)
     my_loss = torch.nn.CrossEntropyLoss()
-    my_opt = torch.optim.SGD(my_model.parameters(),lr=0.001, momentum=0.9, dampening=0, nesterov=True)
+    my_opt = torch.optim.Adam(my_model.parameters(),lr=1e-8, betas=(0.9, 0.999))
 
     EPOCH = opt.epochs
     train_model(my_model, whole_dataloader, my_loss, my_opt, EPOCH, opt.save_interval)

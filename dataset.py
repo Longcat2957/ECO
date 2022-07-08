@@ -56,8 +56,9 @@ class GroupDataAugmentation():
     def __init__(self, resize):
         self.set = T.Compose([
             T.RandomResizedCrop(
-                resize, scale=(0.25, 1.0)
+                resize, scale=(0.2, 1.0)
             ),
+            T.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
             T.RandomHorizontalFlip()
         ])
     def __call__(self, img_group):
