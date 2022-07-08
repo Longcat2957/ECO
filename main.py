@@ -50,7 +50,7 @@ if __name__ == '__main__':
     if opt.checkpoint is not None:
         my_model = torch.load(opt.checkpoint)
     my_loss = torch.nn.CrossEntropyLoss()
-    my_opt = torch.optim.Adam(my_model.parameters(),lr=1e-8, betas=(0.9, 0.999))
+    my_opt = torch.optim.Adam(my_model.parameters(),lr=1e-3, betas=(0.9, 0.999))
 
     EPOCH = opt.epochs
     train_model(my_model, whole_dataloader, my_loss, my_opt, EPOCH, opt.save_interval)
