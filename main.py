@@ -12,8 +12,8 @@ import datetime
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--classes", type=int, default=5, help="number of classes")
-    parser.add_argument("--train_root_path", type=str, default='../data/UCF-101/train/', help="train files path")
-    parser.add_argument("--val_root_path", type=str, default='../data/UCF-101/val/', help="validation files path")
+    parser.add_argument("--train_root_path", type=str, default='../data/UCF-101_C10/train/', help="train files path")
+    parser.add_argument("--val_root_path", type=str, default='../data/UCF-101_C10/val/', help="validation files path")
     parser.add_argument("--batch_size", type=int, default=1, help="batch_size")
     parser.add_argument("--epochs", type=int, default=10, help="number of epochs")
     parser.add_argument("--checkpoint", type=str, default="", help = "Optional path to checkpoint model")

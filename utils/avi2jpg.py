@@ -20,7 +20,7 @@ class avi2jpg:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dir", type=str, default="../../data/UCF-101/train")
+    parser.add_argument("--dir", type=str, default="../../data/UCF-101_C10/val/")
     opt = parser.parse_args()
     # *.avi foramt to *.jpg
     

@@ -1,5 +1,5 @@
-0 ApplyEyeMakeup
-1 ApplyLipstick
-2 Archery
-3 BabyCrawling
-4 BalanceBeam
+0 BenchPress
+1 BodyWeightSquats
+2 Lunges
+3 PullUps
+4 PushUps

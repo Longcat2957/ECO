@@ -6,6 +6,7 @@ from .eco3d import ECO_3D
 
 class ECO_Lite(nn.Module):
     def __init__(self, num_of_classes=101):
+        # UCF-101의 경우 101개의 클래스를 가지고 있습니다.
         super(ECO_Lite, self).__init__()
 
         # 2D Net 모듈
