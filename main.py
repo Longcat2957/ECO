@@ -47,6 +47,8 @@ if __name__ == '__main__':
     }
 
     my_model = ECO_Lite(num_of_classes=opt.classes)
+    if opt.checkpoint is not None:
+        my_model = torch.load(opt.checkpoint)
     my_loss = torch.nn.CrossEntropyLoss()
     my_opt = torch.optim.Adam(my_model.parameters(),lr=1e-8, betas=(0.9, 0.999))
 
