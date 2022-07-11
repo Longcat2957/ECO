@@ -70,9 +70,8 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--classes", type=int, default=5, help="number of classes")
-    parser.add_argument("--train_root_path", type=str, default='../data/UCF-101_C10/train/', help="train files path")
-    parser.add_argument("--val_root_path", type=str, default='../data/UCF-101_C10/val/', help="validation files path")
+    parser.add_argument("--classes", type=int, default=101, help="number of classes")
+    parser.add_argument("--data_root_path", type=str, default='../data/UCF-101/train', help="train files path")
     parser.add_argument("--batch_size", type=int, default=1, help="batch_size")
     parser.add_argument("--epochs", type=int, default=10, help="number of epochs")
     parser.add_argument("--checkpoint", type=str, default=None, help = "Optional path to checkpoint model")
@@ -82,20 +81,20 @@ if __name__ == '__main__':
     opt = parser.parse_args()
     print(opt)
     
-    train_path_list = make_datapath_list(opt.train_root_path)
-    val_path_list = make_datapath_list(opt.val_root_path)
+    train_path_list = make_datapath_list(opt.data_root_path)
     resize, crop_size = 224, 224
     mean, std = [103, 117, 123], [1,1,1]
     video_transform = VideoTransform(resize, crop_size, mean, std)
 
     id_label_dict, label_id_dict = get_label_id_dictionary(class_id_path=opt.classid)
 
-    train_dataset = VideoDataset(
+    wholedataset = VideoDataset(
         train_path_list, label_id_dict, num_segments=16, phase='train', transform=video_transform
     )
-    val_dataset = VideoDataset(
-        val_path_list, label_id_dict, num_segments=16, phase='val', transform=video_transform
-    )
+
+    train_size = int(0.8 * len(wholedataset))
+    test_size = len(wholedataset) - train_size
+    train_dataset, val_dataset = torch.utils.data.random_split(wholedataset, [train_size, test_size])
 
     batch_size = opt.batch_size
     train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -111,7 +110,8 @@ if __name__ == '__main__':
     if opt.checkpoint is not None:
         my_model = torch.load(opt.checkpoint)
     my_loss = torch.nn.CrossEntropyLoss()
-    my_opt = torch.optim.Adam(my_model.parameters(),lr=1e-3, betas=(0.9, 0.999))
+    # my_opt = torch.optim.Adam(my_model.parameters(),lr=1e-3, betas=(0.9, 0.999))
+    my_opt = torch.optim.SGD(my_model.parameters(), lr=1e-3, momentum=0.9)
 
     my_model.to(device)
     result = train_model(my_model, whole_dataloader, my_loss, my_opt, opt.epochs)
