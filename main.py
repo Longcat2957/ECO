@@ -71,7 +71,7 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--classes", type=int, default=101, help="number of classes")
-    parser.add_argument("--data_root_path", type=str, default='../data/UCF-101/train', help="train files path")
+    parser.add_argument("--data_root_path", type=str, default='../data/UCF-101_FULL/train', help="train files path")
     parser.add_argument("--batch_size", type=int, default=1, help="batch_size")
     parser.add_argument("--epochs", type=int, default=10, help="number of epochs")
     parser.add_argument("--checkpoint", type=str, default=None, help = "Optional path to checkpoint model")
