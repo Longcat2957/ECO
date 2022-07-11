@@ -12,45 +12,22 @@ import torchvision.transforms as T
 # input파일이 동영상인지 이미지로 이루어진 디렉토리인지 확인하는 함수
 # 동영상을 이미지로 다시 분할하는 함수 avi2jpg 클래스 호출을 통해 구현
 
-class VideoTransform():
+class VideoTransform_i():
     """
-    Video to images, Group Transform
+    for video_preproc
     """
-
     def __init__(self, resize, crop_size, mean, std):
-        self.data_transform = {
-            'train' : T.Compose([
-                GroupDataAugmentation(int(resize)),
-                GroupToTensor(),
-                GroupImgNormalize(mean, std),
-                Stack()
-            ]),
-            'val' : T.Compose([
+        self.data_transform = T.Compose([
                 GroupResize(int(resize)),
                 GroupCenterCrop(crop_size),
                 GroupToTensor(),
                 GroupImgNormalize(mean, std),
-                Stack()
-            ])
-        }
+                Stack()])
     
-    def __call__(self, img_group, phase):
-        return self.data_transform[phase](img_group)
+    def __call__(self, img_group):
+        return self.data_transform(img_group)
 
 # preprocess classes
-
-class GroupDataAugmentation():
-    def __init__(self, resize):
-        self.set = T.Compose([
-            T.RandomResizedCrop(
-                resize, scale=(0.2, 1.0)
-            ),
-            T.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
-            T.RandomHorizontalFlip()
-        ])
-    def __call__(self, img_group):
-        return [self.set(img) for img in img_group]
-
 class GroupResize():
     def __init__(self, resize, interpolation=Image.BILINEAR):
         self.rescaler = T.Resize(resize, interpolation)
@@ -88,21 +65,27 @@ class Stack():
 
 class preprocECO(object):
     def __init__(self, img_tmpl='image_{:05d}.jpg'):
+        self.num_segments = 16
         self.video_converter = avi2jpg()
-        self.video_transformer = VideoTransform(224, 224, [104, 117, 123], [1, 1, 1])
+        self.video_transformer = VideoTransform_i(224, 224, [104, 117, 123], [1, 1, 1])
         self.video_format_list = ['.avi', '.mp4']
-        pass
+        self.img_tmpl = img_tmpl
+
     def __call__(self, input):
         input_type = self._interprete_type(input)
         if input_type:
             if input_type == 'video':
-                # self._video_preproc 호출
-                pass
+                imgs_group_path = self._video_preproc(input)
             elif input_type == 'dir':
-                pass
+                imgs_group_path = input
+            
+            indices = self._get_indices(imgs_group_path) # [  5  13  21  29  37  46  54  62  70  78  86  95 103 111 119 127]
+            img_group = self._load_imgs(imgs_group_path, self.img_tmpl, indices)
+
+            return self.video_transformer(img_group)
         
         else:
-            print('ERROR[1] 호환되지 않는 파일 또는 디렉토리 입니다.')
+            print("ERROR[1]")
     
     def _interprete_type(self, input):
         if os.path.isfile(input):
@@ -114,8 +97,14 @@ class preprocECO(object):
             return 'dir'
     
     def _video_preproc(self, video):
-
-        pass
+        name, format = os.path.splitext(video)
+        name += '_images'
+        if not os.path.exists(name):
+            os.mkdir(name)
+        
+        imgs_path = os.path.join('.', name)
+        self.video_converter.convert(video, imgs_path)
+        return imgs_path
 
     def _load_imgs(self, dir_path, img_tmpl, indices):
         img_group = []
@@ -140,12 +129,13 @@ class preprocECO(object):
 
 if __name__ == '__main__':
     # 비디오 추론 전처리를 위한 클래스 debug
-    test_video_file_path = 'test.avi'
+    #test_video_file_path = 'test.avi'
     test_img_group_dir_path = './test_dir'
 
     test_preprocECO = preprocECO()
-    print(test_preprocECO._interprete_type(test_video_file_path))
+    #print(test_preprocECO._interprete_type(test_video_file_path))
     print(test_preprocECO._interprete_type(test_img_group_dir_path))
-    print(test_preprocECO(test_video_file_path))
-    print(test_preprocECO(test_img_group_dir_path))
+    #print(test_preprocECO(test_video_file_path))
+    output = test_preprocECO(test_img_group_dir_path)
+    print(output.shape)
     
