@@ -62,7 +62,7 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs):
                 
                 if not os.path.exists('./weights'):
                     os.mkdir('./weights')
-                name = 'best_' + str(epoch) + '_' + str(best_acc) + '.pth'
+                name = 'best_' + str(epoch) + '.pth'
                 save_path = os.path.join('./weights', name)
                 torch.save(model.state_dict(), save_path)
         print()

@@ -29,7 +29,10 @@ if __name__ == '__main__':
     my_input = vid_transformer(opt.video)
     my_input.to(device)
 
-    output = model(my_input)
+    with torch.set_grad_enabled(False):
+        output = model(my_input)
+    
+    output.to('cpu')
     output_clone = output.clone()
 
     for i in range(opt.ans):
