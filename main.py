@@ -1,5 +1,6 @@
 import torch
 import sys
+import os
 import numpy as np
 from dataset import make_datapath_list, VideoTransform, get_label_id_dictionary, VideoDataset
 from model.eco_lite import ECO_Lite
@@ -58,6 +59,12 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs):
             if phase == 'val' and epoch_acc > best_acc:
                 best_acc = epoch_acc
                 best_model_wts = copy.deepcopy(model.state_dict())
+                
+                if not os.path.exists('./weights'):
+                    os.mkdir('./weights')
+                name = 'best_' + str(epoch) + '_' + str(best_acc) + '.pth'
+                save_path = os.path.join('./weights', name)
+                torch.save(model.state_dict(), save_path)
         print()
     
     time_elapsed = time.time() - since
@@ -71,7 +78,7 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--classes", type=int, default=101, help="number of classes")
-    parser.add_argument("--data_root_path", type=str, default='../data/UCF-101_FULL/train', help="train files path")
+    parser.add_argument("--data_root_path", type=str, default='../data/UCF-101/train', help="train files path")
     parser.add_argument("--batch_size", type=int, default=1, help="batch_size")
     parser.add_argument("--epochs", type=int, default=10, help="number of epochs")
     parser.add_argument("--checkpoint", type=str, default=None, help = "Optional path to checkpoint model")
